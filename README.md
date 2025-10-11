@@ -46,6 +46,7 @@ Create a `.env` file in the root directory:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 SESSION_SECRET=your_random_session_secret_here
+PORT=3000
 ```
 
 You can generate a random session secret with:

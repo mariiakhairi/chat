@@ -13,11 +13,19 @@ An AI-powered document chat application that allows you to upload documents (PDF
 
 ## Prerequisites
 
+Before you begin, ensure you have the following installed:
+
 - Node.js 18 or higher
 - npm or yarn
 - A Google Gemini API key (free)
 
-## Getting Your Gemini API Key
+**Verify your setup:**
+```bash
+node --version  # Should show v18.x.x or higher
+npm --version   # Should show a version number
+```
+
+## Getting Your Gemini API Key (Required)
 
 1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
 2. Sign in with your Google account
@@ -41,18 +49,18 @@ npm install
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file in the root directory:
-
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-SESSION_SECRET=your_random_session_secret_here
-PORT=3000
-```
-
-You can generate a random session secret with:
+First, generate a session secret by running this command:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Copy the generated string, then create a `.env` file in the root directory with your values:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+SESSION_SECRET=paste_the_generated_secret_here
+PORT=3000
 ```
 
 ### 4. Run the Application
@@ -61,10 +69,25 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 npm run dev
 ```
 
-The application will start on `http://localhost:3000`
+### 5. Verify It's Working
 
+Once you run the dev command, you should see console output similar to:
+```
+3:48:59 PM [express] serving on port 3000
+```
 
-## How to Use
+Now open your web browser and navigate to:
+```
+http://localhost:3000
+```
+
+You should see the **Document Chat Application** interface with options to upload documents.
+
+If you see the interface, congratulations! Your setup is complete and working correctly.
+
+## How to Use the Application
+
+Once the application is running in your browser at `http://localhost:3000`, you can:
 
 1. **Upload Documents**
    - Click "Upload Document" or drag and drop files
@@ -82,9 +105,34 @@ The application will start on `http://localhost:3000`
    - Remove individual documents by clicking the X button
    - Clear all documents at once with the "Clear All" button
 
-## Docker Deployment
+## Available Scripts
 
-A Dockerfile is included for containerized deployment:
+Here are the npm commands available for this project:
+
+```bash
+npm run dev      # Start development server with hot reload
+npm run build    # Build for production (frontend + backend)
+npm start        # Run production build
+npm run check    # TypeScript type checking
+npm run db:push  # Push database schema changes (if using PostgreSQL)
+```
+
+## Advanced Topics
+
+### Expose to Remote Users (ngrok)
+
+To allow remote access for candidates or team members:
+
+```bash
+# Using ngrok (recommended for testing)
+ngrok http 3000
+```
+
+This creates a public URL that forwards to your localhost. Share the generated URL with others.
+
+### Docker Deployment (Alternative Setup)
+
+Docker is **not required** for running this application. It's provided as an alternative deployment option for production environments or if you prefer containerization.
 
 ```bash
 # Build the image
@@ -97,7 +145,7 @@ docker run -p 3000:3000 \
   document-chat
 ```
 
-## Project Structure
+### Project Structure
 
 ```
 ├── client/               # Frontend React application
@@ -113,7 +161,7 @@ docker run -p 3000:3000 \
 └── package.json         # Dependencies and scripts
 ```
 
-## API Endpoints
+### API Endpoints
 
 - `POST /api/upload` - Upload a document
 - `POST /api/chat` - Send a question and get AI response
@@ -124,11 +172,25 @@ docker run -p 3000:3000 \
 
 ## Technology Stack
 
-- **Frontend**: React, TypeScript, Tailwind CSS, shadcn/ui
-- **Backend**: Express.js, Node.js
-- **AI**: Google Gemini API
+- **Frontend**: React 18, TypeScript, Tailwind CSS, shadcn/ui, Wouter (routing)
+- **Backend**: Express.js, Node.js, TypeScript
+- **AI**: Google Gemini API (gemini-2.5-flash model)
+- **State Management**: TanStack React Query
 - **File Processing**: pdf-parse, mammoth (for DOCX)
-- **Build Tools**: Vite
+- **Build Tools**: Vite, esbuild
+- **Storage**: In-memory (MemStorage)
+
+## Important Notes
+
+### Data Persistence
+- This application uses **in-memory storage** by default
+- All uploaded documents and chat history are cleared when the server restarts
+- For persistent storage, configure a PostgreSQL database with the `DATABASE_URL` environment variable
+
+### Security Considerations
+- Never commit your `.env` file to version control
+- The `GEMINI_API_KEY` should be kept private
+- For production deployment, use environment variables from your hosting platform
 
 ## Troubleshooting
 
@@ -150,7 +212,7 @@ If file uploads fail:
 
 1. Make sure you're using Node.js 18 or higher: `node --version`
 2. Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
-3. Check that port 5000 is available
+3. Check that port 3000 is available (or change PORT in `.env`)
 
 ## License
 

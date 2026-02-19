@@ -4,6 +4,9 @@ package-lock.json
 npm-debug.log*
 yarn.lock
 
+# Build output
+dist/
+
 # Playwright test artifacts
 test-results/
 playwright-report/

@@ -93,7 +93,8 @@ async function registerRoutes(app2) {
       if (file.mimetype === "application/pdf") {
         try {
           const pdfParse = require2("pdf-parse");
-          const pdfData = await pdfParse(file.buffer);
+          const parsePdf = pdfParse.default || pdfParse;
+          const pdfData = await parsePdf(file.buffer);
           content = pdfData.text;
           if (!content || content.trim().length === 0) {
             console.warn("PDF parsed but no text extracted");

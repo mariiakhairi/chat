@@ -39,6 +39,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (file.mimetype === "application/pdf") {
         try {
+          // pdf-parse 1.x has a simple default function export
           const pdfParse = require("pdf-parse");
           const pdfData = await pdfParse(file.buffer);
           content = pdfData.text;

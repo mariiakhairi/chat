@@ -56,4 +56,45 @@ describe('ChatInput Component', () => {
     expect(mockOnSend).not.toHaveBeenCalled();
     expect(textarea).toHaveValue('Hello');
   });
+
+  it('does not send message when disabled', () => {
+    const mockOnSend = jest.fn();
+    render(<ChatInput onSend={mockOnSend} disabled={true} />);
+
+    const textarea = screen.getByPlaceholderText('Ask a question about your document...');
+    const sendButton = screen.getByTestId('send-button');
+
+    fireEvent.change(textarea, { target: { value: 'Hello' } });
+    fireEvent.click(sendButton);
+
+    expect(mockOnSend).not.toHaveBeenCalled();
+    expect(textarea).toHaveValue('Hello');
+  });
+
+  it('does not send whitespace-only messages', () => {
+    const mockOnSend = jest.fn();
+    render(<ChatInput onSend={mockOnSend} />);
+
+    const textarea = screen.getByPlaceholderText('Ask a question about your document...');
+    const sendButton = screen.getByTestId('send-button');
+
+    fireEvent.change(textarea, { target: { value: '   ' } });
+    fireEvent.click(sendButton);
+
+    expect(mockOnSend).not.toHaveBeenCalled();
+    expect(textarea).toHaveValue('   ');
+  });
+
+  it('does not send whitespace-only message on Enter key press', () => {
+    const mockOnSend = jest.fn();
+    render(<ChatInput onSend={mockOnSend} />);
+
+    const textarea = screen.getByPlaceholderText('Ask a question about your document...');
+
+    fireEvent.change(textarea, { target: { value: '  \n  ' } });
+    fireEvent.keyDown(textarea, { key: 'Enter', shiftKey: false });
+
+    expect(mockOnSend).not.toHaveBeenCalled();
+    expect(textarea).toHaveValue('  \n  ');
+  });
 });

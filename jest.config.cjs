@@ -13,4 +13,40 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
+  projects: [
+    {
+      displayName: 'client',
+      testEnvironment: 'jsdom',
+      testMatch: ['<rootDir>/client/**/*.test.{ts,tsx}'],
+      setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+      transform: {
+        '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
+      },
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/client/src/$1',
+        '^@shared/(.*)$': '<rootDir>/shared/$1',
+      },
+    },
+    {
+      displayName: 'server',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/server/**/*.test.{ts,tsx}'],
+      preset: 'ts-jest/presets/default-esm',
+      globals: {
+        'ts-jest': {
+          useESM: true,
+        },
+      },
+      moduleNameMapper: {
+        '^(\\.{1,2}/.*)\\.js$': '$1',
+        '^@shared/(.*)$': '<rootDir>/shared/$1',
+      },
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {
+          useESM: true,
+        }],
+      },
+      extensionsToTreatAsEsm: ['.ts'],
+    },
+  ],
 };

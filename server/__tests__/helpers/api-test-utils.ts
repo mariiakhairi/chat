@@ -23,7 +23,7 @@ export class ApiTestClient {
   async startServer(): Promise<string> {
     // Dynamic import to handle ES modules properly
     const express = (await import('express')).default;
-    const { registerRoutes } = await import('../routes.js');
+    const { registerRoutes } = await import('../../routes.js');
     
     const app = express();
     this.server = await registerRoutes(app);

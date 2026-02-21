@@ -35,6 +35,10 @@ module.exports = {
       globals: {
         'ts-jest': {
           useESM: true,
+          tsconfig: {
+            module: 'ES2022',
+            target: 'ES2022',
+          },
         },
       },
       moduleNameMapper: {
@@ -44,6 +48,10 @@ module.exports = {
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {
           useESM: true,
+          tsconfig: {
+            module: 'ES2022',
+            target: 'ES2022',
+          },
         }],
       },
       extensionsToTreatAsEsm: ['.ts'],

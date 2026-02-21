@@ -4,9 +4,23 @@ import { storage } from "./storage";
 import multer from "multer";
 import { z } from "zod";
 import { GoogleGenAI } from "@google/genai";
-import { createRequire } from "module";
 
-const requireCJS = createRequire(import.meta.url);
+// Dynamically import pdf-parse to handle both ESM and CommonJS environments
+let pdfParse: any;
+const loadPdfParse = async () => {
+  if (!pdfParse) {
+    try {
+      // Try ESM import first
+      // @ts-ignore - pdf-parse doesn't have type declarations
+      const pdfModule = await import('pdf-parse');
+      pdfParse = pdfModule.default || pdfModule;
+    } catch {
+      // Fallback to require for test environments
+      pdfParse = require('pdf-parse');
+    }
+  }
+  return pdfParse;
+};
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -40,8 +54,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (file.mimetype === "application/pdf") {
         try {
           // pdf-parse 1.x has a simple default function export
-          const pdfParse = requireCJS("pdf-parse");
-          const pdfData = await pdfParse(file.buffer);
+          const pdfParser = await loadPdfParse();
+          const pdfData = await pdfParser(file.buffer);
           content = pdfData.text;
           
           if (!content || content.trim().length === 0) {

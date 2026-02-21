@@ -32,6 +32,7 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: ['<rootDir>/server/**/*.test.{ts,tsx}'],
       preset: 'ts-jest/presets/default-esm',
+      setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
       globals: {
         'ts-jest': {
           useESM: true,

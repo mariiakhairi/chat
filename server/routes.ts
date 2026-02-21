@@ -6,7 +6,7 @@ import { z } from "zod";
 import { GoogleGenAI } from "@google/genai";
 import { createRequire } from "module";
 
-const require = createRequire(import.meta.url);
+const requireCJS = createRequire(import.meta.url);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -40,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (file.mimetype === "application/pdf") {
         try {
           // pdf-parse 1.x has a simple default function export
-          const pdfParse = require("pdf-parse");
+          const pdfParse = requireCJS("pdf-parse");
           const pdfData = await pdfParse(file.buffer);
           content = pdfData.text;
           
